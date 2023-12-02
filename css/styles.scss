@@ -45,7 +45,7 @@ $white: rgb(253, 253, 253);
   };
   color: $white;
   font-size: 65px;
-  letter-spacing: 3px;
+/*   letter-spacing: 3px; */
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -59,42 +59,45 @@ $white: rgb(253, 253, 253);
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
 
-
-
-  .button{
-    font-size: 30px;
-    place-self: center;
-    padding: 0;
-    width: $button-diametr;
-    height: $button-diametr;
-    border: none;
-    border-radius: 50%;
-    position: relative;
-    &:active::before{
-      content: "";
-      width: inherit;
-      height: inherit;
-      border-radius: inherit;
-      background-color: rgba(255, 255, 255, 0.3);
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  }
-
-  #zero{
-    grid-column-start: 1;
-    grid-column-end: span 2;
-    border-radius: 100px;
-    width: $button-diametr*2 + 22px;
-    height: $button-diametr;
-  }
-
-  .orange{ background-color: $orange; color: $white;}
-
-  .grey{ background-color: $grey; }
-
-  .dark-grey{ background-color: $dark-grey; color: $white}
 }
 
 
+.button{
+  font-size: 30px;
+  place-self: center;
+  padding: 0;
+  width: $button-diametr;
+  height: $button-diametr;
+  border: none;
+  border-radius: 50%;
+  position: relative;
+  &:active::before{
+    content: "";
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    background-color: rgba(255, 255, 255, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+#zero{
+  grid-column-start: 1;
+  grid-column-end: span 2;
+  border-radius: 100px;
+  width: $button-diametr*2 + 22px;
+  height: $button-diametr;
+}
+
+.orange{ background-color: $orange; color: $white;}
+
+.grey{ background-color: $grey; }
+
+.dark-grey{ background-color: $dark-grey; color: $white}
+
+.active{
+  background-color: $white;
+  color: $orange;
+}
