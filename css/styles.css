@@ -59,7 +59,7 @@
 }
 
 .calculator {
-  max-width: 400px;
+  width: 380px;
   height: 650px;
   font-family: "Open Sans";
   font-weight: 300;
@@ -73,6 +73,7 @@
 }
 
 .display {
+  overflow: hidden;
   height: 30%;
   padding-left: 20px;
   padding-right: 20px;
@@ -136,7 +137,7 @@
   color: rgb(253, 253, 253);
 }
 
-.active {
+.orange-active {
   background-color: rgb(253, 253, 253);
   color: #f79b19;
 }/*# sourceMappingURL=styles.css.map */
