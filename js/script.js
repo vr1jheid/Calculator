@@ -87,15 +87,12 @@ function calculator(event) {
     }
   }
 
-
-
-
   let target = event.target;
   if (target.tagName !== "BUTTON") return;
   if (display.textContent.length > 8) return;
   if (operator.button) operator.button.classList.remove("orange-active");
+  
   // Number
-
   if (target.value){
     console.log(comma.status);
     if (!comma.status) {
