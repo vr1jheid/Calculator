@@ -2,6 +2,7 @@
 
 let buttonArea = document.querySelector(".buttons");
 let display = document.querySelector(".display");
+<<<<<<< Updated upstream
 let n = 1;
 let result = 0;
 
@@ -61,6 +62,97 @@ function calculate(event) {
       break;
   }
   display.textContent = displayText;
+=======
+let currentValue = 0;
+let prevValue = 0;
+let prevButton;
+let cache = {
+  action: null,
+  prevValue: null,
+  currentValue: null,
+};
+let action = {
+  type: null,
+  button: null,
 }
 
-buttonArea.addEventListener("click", calculate)
+function show(number) {
+  display.textContent = number.toString();
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+function doAction(action, a, b) {
+  switch (action) {
+    case "sum":
+      currentValue += prevValue;
+      show(currentValue);
+      break;
+    case "multiply":
+      currentValue *= prevValue;
+      show(currentValue);
+      break;
+    case "divide":
+      currentValue = Number((prevValue/currentValue).toFixed(8));
+      show(currentValue);
+      break;
+    case "subtract":
+      //currentValue = prevValue - currentValue;
+      subtract(a, b)
+      show(currentValue);
+      break;
+    default:
+      break;
+  }
+}
+
+
+function calculator(event) {
+  let target = event.target;
+  if (target.tagName !== "BUTTON") return;
+
+  if (prevButton?.dataset.operator) prevButton.classList.remove("orange-active");
+
+  if (target.value){
+    currentValue = currentValue*10 + Number(target.value);
+    show(currentValue);
+  }
+
+  if (target.dataset.operator) {
+    target.classList.add("orange-active");
+    if (prevButton?.dataset.operator) {
+      action.type = target.dataset.operator;
+      action.button = target;
+    }
+    else{
+      doAction(action.type);
+      action.type = target.dataset.operator;
+      action.button = target;
+      prevValue = currentValue;
+      currentValue = 0;
+    }
+  }
+
+  if (target.dataset.equal) {
+    if (action.type) {
+      cache.currentValue = currentValue;
+      cache.action = action.type;
+      doAction(action.type);
+      prevValue = cache.currentValue;
+      action.type = null;
+    }
+    else {
+      doAction(cache.action);
+    }
+
+
+  }
+
+  console.log(`current =${currentValue}||previous =${prevValue}`);
+  prevButton = target;
+>>>>>>> Stashed changes
+}
+
+buttonArea.addEventListener("click", calculator);
