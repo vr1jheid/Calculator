@@ -1,158 +1,142 @@
 "use strict"
 
-let buttonArea = document.querySelector(".buttons");
-let display = document.querySelector(".display");
-<<<<<<< Updated upstream
-let n = 1;
-let result = 0;
+const buttonArea = document.querySelector(".buttons");
+const display = document.querySelector(".display");
 
-
-
-function calculate(event) {
-  
-  function toText(number) {
-    return number.toString().replace(".", ",");
-  }
-  function toNumber(text) {
-    console.log(text);
-  return +text.replace(",", ".");
-}
-
-  if (event.target.tagName !== "BUTTON") return;
-
-  let target = event.target;
-  let displayText = display.textContent;
-  let numOfNums = display.textContent.length;
-
-  if (!target.dataset.action && numOfNums < 9) {
-    displayText = toText( toNumber(displayText)*n + toNumber(target.textContent) )
-    n = 10;
-    display.textContent = displayText;
-    return;
-  }
-
-  switch (target.dataset.action) {
-
-    case "clear":
-      displayText = "0";
-      break;
-
-    case "plus-minus":
-      /* (-1*+display.textContent).toString() */
-      displayText = displayText[0] === "-"? displayText.slice(1): displayText ="-"+displayText;
-      break;
-
-    case "percent":
-      displayText = toText( toNumber(displayText) * 0.01 );
-      break;
-
-    case "comma":
-      if (displayText[numOfNums - 1] === ",") break
-      displayText += ",";
-      break;
-
-    case "sum":
-      displayText = result + toNumber(displayText);
-      result = toNumber(displayText);
-      target.classList.toggle("orange-active");
-      console.log(result);
-      break;
-
-    default:
-      break;
-  }
-  display.textContent = displayText;
-=======
 let currentValue = 0;
 let prevValue = 0;
 let prevButton;
-let cache = {
-  action: null,
-  prevValue: null,
-  currentValue: null,
+let superSmallNum = 0.0000000000001;
+let comma = {
+  status: false,
+  multi: 0.1,
+  counter: 0,
+  reset(){
+    this.status = false;
+    this.multi = 0.1;
+    this.counter = 0;
+  }
 };
-let action = {
+let operator = {
   type: null,
   button: null,
 }
 
-function show(number) {
-  display.textContent = number.toString();
-}
-
-function subtract(a, b) {
-  return a - b;
-}
-
-function doAction(action, a, b) {
-  switch (action) {
-    case "sum":
-      currentValue += prevValue;
-      show(currentValue);
-      break;
-    case "multiply":
-      currentValue *= prevValue;
-      show(currentValue);
-      break;
-    case "divide":
-      currentValue = Number((prevValue/currentValue).toFixed(8));
-      show(currentValue);
-      break;
-    case "subtract":
-      //currentValue = prevValue - currentValue;
-      subtract(a, b)
-      show(currentValue);
-      break;
-    default:
-      break;
-  }
+function show(data) {
+  display.textContent = data.toString().replace(".", ",");
 }
 
 
 function calculator(event) {
-  let target = event.target;
-  if (target.tagName !== "BUTTON") return;
 
-  if (prevButton?.dataset.operator) prevButton.classList.remove("orange-active");
-
-  if (target.value){
-    currentValue = currentValue*10 + Number(target.value);
-    show(currentValue);
+  function applyOperator(operator) {
+    switch (operator) {
+      case "sum":
+        currentValue += prevValue;
+        show(currentValue);
+        break;
+      case "multiply":
+        currentValue *= prevValue;
+        show(currentValue);
+        break;
+      case "divide":
+        currentValue = Number((prevValue/currentValue).toFixed(8));
+        show(currentValue);
+        break;
+      case "subtract":
+        currentValue = prevValue - currentValue;
+        show(currentValue);
+        break;
+      default:
+        break;
+    }
   }
 
-  if (target.dataset.operator) {
-    target.classList.add("orange-active");
-    if (prevButton?.dataset.operator) {
-      action.type = target.dataset.operator;
-      action.button = target;
+  function applyEditor(editor) {
+    switch (editor) {
+      case "clear":
+        if (prevButton?.dataset.edit === "clear") {
+          prevValue = 0
+        }
+        operator.button.classList.add("orange-active");
+        currentValue = 0;
+        show(currentValue);
+        break;
+
+      case "plus-minus":
+        currentValue *= -1;
+        show(currentValue);
+        break;
+
+      case "percent":
+        if (!prevValue) {
+          currentValue *= 0.01
+        }
+        else{
+          currentValue *= 0.01*prevValue;
+        }
+        show(currentValue);
+        break;
+        case "comma":
+          comma.status = true;
+          show(currentValue + ",")
+          break;
+    
+      default:
+        break;
+    }
+  }
+
+
+
+
+  let target = event.target;
+  if (target.tagName !== "BUTTON") return;
+  if (display.textContent.length > 8) return;
+  if (operator.button) operator.button.classList.remove("orange-active");
+  // Number
+
+  if (target.value){
+    console.log(comma.status);
+    if (!comma.status) {
+      currentValue = currentValue*10 + Number(target.value);
+      show(currentValue);
     }
     else{
-      doAction(action.type);
-      action.type = target.dataset.operator;
-      action.button = target;
+      comma.counter++;
+      currentValue = (currentValue + Number(target.value)*comma.multi + superSmallNum).toFixed(comma.counter);
+      show(currentValue);
+      currentValue = +currentValue;
+      comma.multi *= 0.1;
+    }
+
+  }
+
+  if (target.dataset.edit) {
+    applyEditor(target.dataset.edit)
+  }
+
+
+  // Operator
+  if (target.dataset.operator) {
+    comma.reset();
+    console.log(comma);
+    if (target.dataset.operator !== "equal") target.classList.add("orange-active");
+    
+    if (prevButton?.dataset.operator) {
+      operator.type = target.dataset.operator;
+      operator.button = target;
+    }
+    else{
+      applyOperator(operator.type);
+      operator.type = target.dataset.operator;
+      operator.button = target;
       prevValue = currentValue;
       currentValue = 0;
     }
   }
 
-  if (target.dataset.equal) {
-    if (action.type) {
-      cache.currentValue = currentValue;
-      cache.action = action.type;
-      doAction(action.type);
-      prevValue = cache.currentValue;
-      action.type = null;
-    }
-    else {
-      doAction(cache.action);
-    }
-
-
-  }
-
-  console.log(`current =${currentValue}||previous =${prevValue}`);
   prevButton = target;
->>>>>>> Stashed changes
 }
 
 buttonArea.addEventListener("click", calculator);

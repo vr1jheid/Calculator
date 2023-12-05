@@ -93,11 +93,11 @@ $white: rgb(253, 253, 253);
   height: $button-diametr;
 }
 
-.orange{ background-color: $orange; color: $white;}
+.operator{ background-color: $orange; color: $white;}
 
-.grey{ background-color: $grey; }
+.editor{ background-color: $grey; }
 
-.dark-grey{ background-color: $dark-grey; color: $white}
+.number{ background-color: $dark-grey; color: $white}
 
 .orange-active{
   background-color: $white;
