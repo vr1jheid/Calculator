@@ -117,6 +117,13 @@ $white: rgb(253, 253, 253);
   }
   .calculator{
     margin: 0 auto;
-    height: 100%
+    height: 100%;
+    touch-action: manipulation;
+  }
+  .display{
+    touch-action: manipulation;
+  }
+  .buttons{
+    touch-action: manipulation;
   }
 }

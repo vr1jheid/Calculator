@@ -155,5 +155,12 @@
   .calculator {
     margin: 0 auto;
     height: 100%;
+    touch-action: manipulation;
+  }
+  .display {
+    touch-action: manipulation;
+  }
+  .buttons {
+    touch-action: manipulation;
   }
 }/*# sourceMappingURL=styles.css.map */
