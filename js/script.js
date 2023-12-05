@@ -58,7 +58,8 @@ function calculator(event) {
         if (prevButton?.dataset.edit === "clear") {
           prevValue = 0
         }
-        operator.button.classList.add("orange-active");
+        comma.reset();
+        operator.button?.classList.add("orange-active");
         currentValue = 0;
         show(currentValue);
         break;
@@ -91,7 +92,7 @@ function calculator(event) {
   if (target.tagName !== "BUTTON") return;
   if (display.textContent.length > 8) return;
   if (operator.button) operator.button.classList.remove("orange-active");
-  
+
   // Number
   if (target.value){
     console.log(comma.status);
