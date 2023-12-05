@@ -150,6 +150,7 @@
     background-color: #000000;
     width: 100vw;
     height: 100vh;
+    touch-action: manipulation;
   }
   .calculator {
     margin: 0 auto;
