@@ -2,11 +2,10 @@
 
 const buttonArea = document.querySelector(".buttons");
 const display = document.querySelector(".display");
-
 let currentValue = 0;
 let prevValue = 0;
 let prevButton;
-let superSmallNum = 0.0000000000001;
+const superSmallNum = 1e-9;
 let comma = {
   status: false,
   multi: 0.1,
@@ -22,8 +21,35 @@ let operator = {
   button: null,
 }
 
-function show(data) {
-  display.textContent = data.toString().replace(".", ",");
+
+function show(value) {
+  let result = value;
+  let isInt = result % 1 === 0;
+  let beforeDotLength = Math.round(result).toString().length;
+  let afterDotLength = 0;
+  //let fullLength = result.toString().length;
+
+  if (!isInt) {
+    afterDotLength = result.toString().length - beforeDotLength - 1;
+  }
+
+  if (comma.status) {
+    result = Number((result + superSmallNum).toFixed(comma.counter));
+  }
+
+  if (result > 1e9-1) {
+    console.log(result);
+    console.log(beforeDotLength);
+    result = result/Number(("1" + "0".repeat(beforeDotLength - 1)))
+    result = Number(result.toFixed(5));
+    result = result + `e${beforeDotLength - 1}`
+  }
+
+  if (result < 1e8-1 && !isInt) {
+    result = Number(result.toFixed(9 - beforeDotLength - 1))
+  }
+
+  display.textContent = result.toString().replace(".", ",");
 }
 
 
@@ -40,7 +66,7 @@ function calculator(event) {
         show(currentValue);
         break;
       case "divide":
-        currentValue = Number((prevValue/currentValue).toFixed(8));
+        currentValue = prevValue/currentValue;
         show(currentValue);
         break;
       case "subtract":
@@ -56,7 +82,9 @@ function calculator(event) {
     switch (editor) {
       case "clear":
         if (prevButton?.dataset.edit === "clear") {
+          operator.button?.classList.remove("orange-active");
           prevValue = 0
+          break;
         }
         comma.reset();
         operator.button?.classList.add("orange-active");
@@ -78,9 +106,11 @@ function calculator(event) {
         }
         show(currentValue);
         break;
+
         case "comma":
+          if ((currentValue > 1e8-1)) break;
           comma.status = true;
-          show(currentValue + ",")
+          display.textContent = currentValue + ",";
           break;
     
       default:
@@ -90,24 +120,24 @@ function calculator(event) {
 
   let target = event.target;
   if (target.tagName !== "BUTTON") return;
-  if (display.textContent.length > 8) return;
   if (operator.button) operator.button.classList.remove("orange-active");
 
   // Number
   if (target.value){
-    console.log(comma.status);
+    if (prevButton?.dataset.operator)  currentValue = 0;
+    if (currentValue > 1e8-1) return;
+    // Ввод числа
     if (!comma.status) {
       currentValue = currentValue*10 + Number(target.value);
       show(currentValue);
     }
     else{
       comma.counter++;
-      currentValue = (currentValue + Number(target.value)*comma.multi + superSmallNum).toFixed(comma.counter);
+      currentValue = currentValue + Number(target.value)*comma.multi /* + superSmallNum *//* .toFixed(comma.counter) */;
       show(currentValue);
       currentValue = +currentValue;
       comma.multi *= 0.1;
     }
-
   }
 
   if (target.dataset.edit) {
@@ -118,7 +148,6 @@ function calculator(event) {
   // Operator
   if (target.dataset.operator) {
     comma.reset();
-    console.log(comma);
     if (target.dataset.operator !== "equal") target.classList.add("orange-active");
     
     if (prevButton?.dataset.operator) {
@@ -129,11 +158,12 @@ function calculator(event) {
       applyOperator(operator.type);
       operator.type = target.dataset.operator;
       operator.button = target;
+
       prevValue = currentValue;
-      currentValue = 0;
+
     }
   }
-
+  console.log(`currentValue = ${currentValue} | prevValue = ${prevValue}`);
   prevButton = target;
 }
 

@@ -73,12 +73,13 @@
 }
 
 .display {
-  overflow: hidden;
+  /*   overflow: hidden; */
   height: 30%;
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 10px;
-  color: rgb(253, 253, 253);
+  /*   color: $white; */
+  color: #f79b19;
   font-size: 65px;
   /*   letter-spacing: 3px; */
   display: flex;
