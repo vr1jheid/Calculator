@@ -25,7 +25,7 @@ let operator = {
 function show(value) {
   let result = value;
   let isInt = result % 1 === 0;
-  let beforeDotLength = Math.round(result).toString().length;
+  let beforeDotLength = Math.round(result).toString().replace("-","").length;
   let afterDotLength = 0;
   //let fullLength = result.toString().length;
 
@@ -37,7 +37,7 @@ function show(value) {
     result = Number((result + superSmallNum).toFixed(comma.counter));
   }
 
-  if (result > 1e9-1) {
+  if (result > 1e9-1 || result < -1e9+1) {
     console.log(result);
     console.log(beforeDotLength);
     result = result/Number(("1" + "0".repeat(beforeDotLength - 1)))
@@ -160,7 +160,6 @@ function calculator(event) {
       operator.button = target;
 
       prevValue = currentValue;
-
     }
   }
   console.log(`currentValue = ${currentValue} | prevValue = ${prevValue}`);
