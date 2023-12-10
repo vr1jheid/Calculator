@@ -95,7 +95,7 @@
 }
 
 .button {
-  font-size: 30px;
+  font-size: 34px;
   place-self: center;
   padding: 0;
   width: 75px;
@@ -121,6 +121,9 @@
   border-radius: 100px;
   width: 172px;
   height: 75px;
+  padding-top: 20px;
+  padding-left: 35px;
+  display: flex;
 }
 
 .operator {
@@ -153,6 +156,7 @@
     touch-action: manipulation;
   }
   .calculator {
+    padding: 50px 0;
     margin: 0 auto;
     height: 100%;
     touch-action: manipulation;

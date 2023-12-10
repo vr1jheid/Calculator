@@ -28,18 +28,25 @@ function show(value) {
   let beforeDotLength = Math.round(result).toString().replace("-","").length;
   let afterDotLength = 0;
   //let fullLength = result.toString().length;
+  console.log(result);
+  if (result.toString().includes("e")) {
+    let strResult = result.toString();
+    display.textContent = strResult.slice(0, beforeDotLength) + strResult.slice(strResult.indexOf("e"));
+    return;
+  }
 
   if (!isInt) {
     afterDotLength = result.toString().length - beforeDotLength - 1;
   }
 
-  if (comma.status) {
-    result = Number((result + superSmallNum).toFixed(comma.counter));
+  if (comma.status && currentValue === 0 ) {
+    if (comma.counter > 6) return;
+    display.textContent = currentValue + "," + "0".repeat(comma.counter);
+    return;
   }
 
+
   if (result > 1e9-1 || result < -1e9+1) {
-    console.log(result);
-    console.log(beforeDotLength);
     result = result/Number(("1" + "0".repeat(beforeDotLength - 1)))
     result = Number(result.toFixed(5));
     result = result + `e${beforeDotLength - 1}`
@@ -80,6 +87,9 @@ function calculator(event) {
 
   function applyEditor(editor) {
     switch (editor) {
+      case "fullClear":
+        break;
+
       case "clear":
         if (prevButton?.dataset.edit === "clear") {
           operator.button?.classList.remove("orange-active");
@@ -87,7 +97,7 @@ function calculator(event) {
           break;
         }
         comma.reset();
-        operator.button?.classList.add("orange-active");
+        if (operator.type !== "equal") operator.button?.classList.add("orange-active");
         currentValue = 0;
         show(currentValue);
         break;
@@ -99,7 +109,7 @@ function calculator(event) {
 
       case "percent":
         if (!prevValue) {
-          currentValue *= 0.01
+          currentValue *= 0.01;
         }
         else{
           currentValue *= 0.01*prevValue;
@@ -107,11 +117,11 @@ function calculator(event) {
         show(currentValue);
         break;
 
-        case "comma":
-          if ((currentValue > 1e8-1)) break;
-          comma.status = true;
-          display.textContent = currentValue + ",";
-          break;
+      case "comma":
+        if ((currentValue > 1e8-1)) break;
+        comma.status = true;
+        display.textContent = currentValue + ",";
+        break;
     
       default:
         break;
@@ -125,7 +135,7 @@ function calculator(event) {
   // Number
   if (target.value){
     if (prevButton?.dataset.operator)  currentValue = 0;
-    if (currentValue > 1e8-1) return;
+    if (currentValue > 1e8-1 || currentValue < -1e8+1) return;
     // Ввод числа
     if (!comma.status) {
       currentValue = currentValue*10 + Number(target.value);
@@ -133,7 +143,7 @@ function calculator(event) {
     }
     else{
       comma.counter++;
-      currentValue = currentValue + Number(target.value)*comma.multi /* + superSmallNum *//* .toFixed(comma.counter) */;
+      currentValue = currentValue + Number(target.value)*comma.multi;
       show(currentValue);
       currentValue = +currentValue;
       comma.multi *= 0.1;
@@ -162,7 +172,7 @@ function calculator(event) {
       prevValue = currentValue;
     }
   }
-  console.log(`currentValue = ${currentValue} | prevValue = ${prevValue}`);
+  //console.log(`currentValue = ${currentValue} | prevValue = ${prevValue}`);
   prevButton = target;
 }
 
