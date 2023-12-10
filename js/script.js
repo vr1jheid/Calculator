@@ -26,9 +26,6 @@ function show(value) {
   let result = value;
   let isInt = result % 1 === 0;
   let beforeDotLength = Math.round(result).toString().replace("-","").length;
-  let afterDotLength = 0;
-  //let fullLength = result.toString().length;
-  console.log(result);
   if (result.toString().includes("e")) {
     let strResult = result.toString();
     display.textContent = strResult.slice(0, beforeDotLength) + strResult.slice(strResult.indexOf("e"));
@@ -45,7 +42,6 @@ function show(value) {
     return;
   }
 
-
   if (result > 1e9-1 || result < -1e9+1) {
     result = result/Number(("1" + "0".repeat(beforeDotLength - 1)))
     result = Number(result.toFixed(5));
@@ -55,7 +51,6 @@ function show(value) {
   if (result < 1e8-1 && !isInt) {
     result = Number(result.toFixed(9 - beforeDotLength - 1))
   }
-
   display.textContent = result.toString().replace(".", ",");
 }
 
@@ -154,7 +149,6 @@ function calculator(event) {
     applyEditor(target.dataset.edit)
   }
 
-
   // Operator
   if (target.dataset.operator) {
     comma.reset();
@@ -172,7 +166,6 @@ function calculator(event) {
       prevValue = currentValue;
     }
   }
-  //console.log(`currentValue = ${currentValue} | prevValue = ${prevValue}`);
   prevButton = target;
 }
 
